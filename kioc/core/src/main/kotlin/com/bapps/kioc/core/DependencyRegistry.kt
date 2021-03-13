@@ -12,6 +12,11 @@ internal class DependencyRegistry {
         dependencies[qualifier] = provider
     }
 
+    fun <T> get(qualifier: Qualifier): T? {
+        val provider = dependencies[qualifier]
+        return provider?.get() as? T
+    }
+
     fun <T> requireDependency(qualifier: Qualifier): T {
         val provider = dependencies[qualifier] ?: throw DependencyNotFoundException(qualifier)
         return provider.get() as T

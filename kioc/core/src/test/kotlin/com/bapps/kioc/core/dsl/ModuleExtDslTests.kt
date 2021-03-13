@@ -2,7 +2,6 @@ package com.bapps.kioc.core.dsl
 
 import com.bapps.kioc.core.*
 import org.amshove.kluent.shouldContain
-import org.amshove.kluent.shouldContainAll
 import org.junit.Test
 
 class ModuleExtDslTests {
@@ -30,17 +29,43 @@ class ModuleExtDslTests {
             single { boat }
 
             factory {
-                val car: Car = get()
-                val bike: Bike = get()
-                val boat: Boat = get()
+                val car: Car = require()
+                val bike: Bike = require()
+                val boat: Boat = require()
                 Garage(listOf(car, bike, boat))
             }
         }
-        val garage: Garage = module.get()
+        val garage: Garage = module.require()
 
         // assert
         garage.vehicles shouldContain car
         garage.vehicles shouldContain bike
         garage.vehicles shouldContain boat
+    }
+
+    @Test
+    fun `Related modules should be used to return dependency`() {
+        // arrange
+        val car = Car()
+        val bike = Bike()
+
+        // act
+        val vehiclesModule = module {
+            single { car }
+            single { bike }
+        }
+
+        val garageModule = module(dependsOn = arrayOf(vehiclesModule)) {
+            single {
+                val car: Car = require()
+                val bike: Bike = require()
+                Garage(listOf(car, bike))
+            }
+        }
+        val garage: Garage = garageModule.require()
+
+        // assert
+        garage.vehicles shouldContain car
+        garage.vehicles shouldContain bike
     }
 }

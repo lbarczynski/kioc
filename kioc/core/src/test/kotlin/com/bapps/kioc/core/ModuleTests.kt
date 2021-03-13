@@ -45,8 +45,8 @@ class ModuleTests {
         // act
         module.register(qualifierFirst, Single(ModuleScope(module)) { expectedCar })
         module.register(qualifierSecond, Single(ModuleScope(module)) { expectedBike })
-        val receivedCar: Vehicle = module.get(qualifierFirst)
-        val receivedBike: Vehicle = module.get(qualifierSecond)
+        val receivedCar: Vehicle = module.get(qualifierFirst)!!
+        val receivedBike: Vehicle = module.get(qualifierSecond)!!
 
         // assert
         receivedCar shouldBeEqualTo expectedCar
