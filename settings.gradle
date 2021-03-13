@@ -1,2 +1,6 @@
+rootProject.name = "kotlin-ioc-container"
+
+include ':kioc:core',
+        ':kioc:androidx'
+
 include ':sample-app'
-rootProject.name = "kioc-sample-app"
