@@ -2,7 +2,7 @@ package com.bapps.kioc.core
 
 typealias InstanceFactory<T> = () -> T
 
-interface Provider<T> {
+interface Provider<out T> {
     fun get(): T
 }
 
