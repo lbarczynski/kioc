@@ -1,6 +1,9 @@
 package com.bapps.kioc.core
 
+import com.bapps.kioc.core.dsl.module
+import com.bapps.kioc.core.dsl.single
 import org.amshove.kluent.shouldBeEqualTo
+import org.amshove.kluent.shouldBeInstanceOf
 import org.junit.Test
 
 class ModuleTests {
@@ -51,5 +54,24 @@ class ModuleTests {
         // assert
         receivedCar shouldBeEqualTo expectedCar
         receivedBike shouldBeEqualTo expectedBike
+    }
+
+    @Test
+    fun `There should be relation between not dependent modules`() {
+        // arrange
+        val carModule = module {
+            single<Vehicle> { Car() }
+        }
+        val boatModule = module {
+            single<Vehicle> { Boat() }
+        }
+
+        // act
+        val car: Vehicle = carModule.require()
+        val boat: Vehicle = boatModule.require()
+
+        // assert
+        car shouldBeInstanceOf Car::class
+        boat shouldBeInstanceOf Boat::class
     }
 }

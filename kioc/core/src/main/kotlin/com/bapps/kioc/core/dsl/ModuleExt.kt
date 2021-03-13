@@ -6,8 +6,8 @@ typealias ModuleFactory = Module.() -> Unit
 
 fun module(scope: ModuleFactory) = module(emptyArray(), scope)
 
-fun module(dependsOn: Array<Module>, scope: ModuleFactory): Module {
+fun module(dependsOn: Array<Module>, factory: ModuleFactory): Module {
     val module = Module(dependsOn.toList())
-    scope(module)
+    factory(module)
     return module
 }

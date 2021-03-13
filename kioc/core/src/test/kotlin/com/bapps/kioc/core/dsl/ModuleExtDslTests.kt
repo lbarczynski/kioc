@@ -16,7 +16,7 @@ class ModuleExtDslTests {
     }
 
     @Test
-    fun `Related dependencies should be possible to register`() {
+    fun `Related dependencies should be available during registration`() {
         // arrange
         val car = Car()
         val bike = Bike()
@@ -29,9 +29,9 @@ class ModuleExtDslTests {
             single { boat }
 
             factory {
-                val car: Car = require()
-                val bike: Bike = require()
-                val boat: Boat = require()
+                val car: Car = get()
+                val bike: Bike = get()
+                val boat: Boat = get()
                 Garage(listOf(car, bike, boat))
             }
         }
@@ -57,8 +57,8 @@ class ModuleExtDslTests {
 
         val garageModule = module(dependsOn = arrayOf(vehiclesModule)) {
             single {
-                val car: Car = require()
-                val bike: Bike = require()
+                val car: Car = get()
+                val bike: Bike = get()
                 Garage(listOf(car, bike))
             }
         }

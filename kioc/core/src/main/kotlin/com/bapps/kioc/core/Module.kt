@@ -22,5 +22,6 @@ class Module(private val dependsOn: List<Module> = emptyList()) {
 }
 
 class ModuleScope(private val module: Module) {
-    fun <T> get(qualifier: Qualifier) = module.get<T>(qualifier)
+    inline fun <reified T> get() = get<T>(TypeQualifier(T::class))
+    fun <T> get(qualifier: Qualifier) = module.require<T>(qualifier)
 }
