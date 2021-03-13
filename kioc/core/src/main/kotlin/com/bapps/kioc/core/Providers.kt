@@ -1,15 +1,15 @@
 package com.bapps.kioc.core
 
-typealias InstanceFactory<T> = () -> T
+typealias InstanceFactory<T> = ModuleScope.() -> T
 
 interface Provider<out T> {
     fun get(): T
 }
 
-class Single<T>(factory: InstanceFactory<T>) : Provider<T> {
+class Single<T>(private val moduleScope: ModuleScope, factory: InstanceFactory<T>) : Provider<T> {
 
     private val instance by lazy {
-        factory()
+        factory(moduleScope)
     }
 
     override fun get(): T {
@@ -17,8 +17,8 @@ class Single<T>(factory: InstanceFactory<T>) : Provider<T> {
     }
 }
 
-class Factory<T>(private val factory: InstanceFactory<T>) : Provider<T> {
+class Factory<T>(private val moduleScope: ModuleScope, private val factory: InstanceFactory<T>) : Provider<T> {
     override fun get(): T {
-        return factory()
+        return factory(moduleScope)
     }
 }

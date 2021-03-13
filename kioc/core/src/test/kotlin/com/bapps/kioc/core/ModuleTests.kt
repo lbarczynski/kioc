@@ -13,8 +13,8 @@ class ModuleTests {
         val secondCar = Car()
 
         // act
-        module.register<Vehicle>(Single { firstCar })
-        module.register(Single { secondCar })
+        module.register<Vehicle>(Single(ModuleScope(module)) { firstCar })
+        module.register(Single(ModuleScope(module)) { secondCar })
         val vehicle = module.get<Vehicle>()
         val car = module.get<Car>()
 
@@ -29,8 +29,8 @@ class ModuleTests {
         val module = Module()
 
         // act
-        module.register(Single<Vehicle> { Car() })
-        module.register(Single<Vehicle> { Car() })
+        module.register(Single<Vehicle>(ModuleScope(module)) { Car() })
+        module.register(Single<Vehicle>(ModuleScope(module)) { Car() })
     }
 
     @Test
@@ -43,8 +43,8 @@ class ModuleTests {
         val qualifierSecond: Qualifier = NameQualifier("second")
 
         // act
-        module.register(qualifierFirst, Single { expectedCar })
-        module.register(qualifierSecond, Single { expectedBike })
+        module.register(qualifierFirst, Single(ModuleScope(module)) { expectedCar })
+        module.register(qualifierSecond, Single(ModuleScope(module)) { expectedBike })
         val receivedCar: Vehicle = module.get(qualifierFirst)
         val receivedBike: Vehicle = module.get(qualifierSecond)
 

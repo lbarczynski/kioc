@@ -16,3 +16,7 @@ class Module(/*vararg dependsOn: Module*/) {
     inline fun <reified T> register(provider: Provider<T>) = register(TypeQualifier(T::class), provider)
     inline fun <reified T> get() = get<T>(TypeQualifier(T::class))
 }
+
+class ModuleScope(private val module: Module) {
+    fun <T> get(qualifier: Qualifier) = module.get<T>(qualifier)
+}
