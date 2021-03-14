@@ -51,5 +51,14 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/factory_tv" />
 
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/viewModelText_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{viewModel.text}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/viewmodel_tv" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

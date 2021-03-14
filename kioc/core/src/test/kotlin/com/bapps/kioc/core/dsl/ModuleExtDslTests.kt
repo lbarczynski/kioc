@@ -36,7 +36,9 @@ class ModuleExtDslTests {
                 Garage(listOf(car, bike, boat))
             }
         }
-        val garage: Garage = module.require<Garage>().get()
+        val garage: Garage = module
+            .require<Garage>()
+            .get()
 
         // assert
         garage.vehicles shouldContain car
@@ -63,7 +65,9 @@ class ModuleExtDslTests {
                 Garage(listOf(car, bike))
             }
         }
-        val garage: Garage = garageModule.require<Garage>().get(Parameters())
+        val garage: Garage = garageModule
+            .require<Garage>()
+            .get()
 
         // assert
         garage.vehicles shouldContain car
@@ -81,7 +85,9 @@ class ModuleExtDslTests {
         }
 
         // act
-        val vehicle = module.require<Vehicle>().get(Parameters(expectedWheelsValue))
+        val vehicle = module
+            .require<Vehicle>()
+            .get(parameters(expectedWheelsValue))
 
         // assert
         vehicle.wheels `should be equal to` expectedWheelsValue

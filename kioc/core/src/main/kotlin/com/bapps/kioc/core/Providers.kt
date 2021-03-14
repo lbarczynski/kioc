@@ -3,7 +3,7 @@ package com.bapps.kioc.core
 typealias InstanceFactory<T> = ModuleScope.(Parameters) -> T
 
 interface Provider<out T> {
-    fun get(parameters: Parameters = Parameters()): T
+    fun get(parameters: Parameters = parameters()): T
 }
 
 class Singleton<T>(private val moduleScope: ModuleScope, private val factory: InstanceFactory<T>) : Provider<T> {

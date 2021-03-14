@@ -22,6 +22,10 @@ class Module(private val dependsOn: List<Module> = emptyList()) {
 }
 
 class ModuleScope(private val module: Module) {
-    fun <T> get(qualifier: Qualifier, parameters: Parameters = Parameters()) = module.require<T>(qualifier).get(parameters)
-    inline fun <reified T> get(parameters: Parameters = Parameters()) = get<T>(TypeQualifier(T::class), parameters)
+
+    fun <T> get(qualifier: Qualifier, parameters: Parameters = parameters()) =
+        module.require<T>(qualifier).get(parameters)
+
+    inline fun <reified T> get(parameters: Parameters = parameters()) =
+        get<T>(TypeQualifier(T::class), parameters)
 }

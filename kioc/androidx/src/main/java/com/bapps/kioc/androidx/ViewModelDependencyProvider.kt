@@ -8,16 +8,19 @@ import com.bapps.kioc.core.ModuleScope
 import com.bapps.kioc.core.Parameters
 import com.bapps.kioc.core.Provider
 
+typealias ViewModelInstanceFactory<T> = ModuleScope.(ViewModelParameters) -> T
+
+class ViewModelParameters(val viewModelStoreOwner: ViewModelStoreOwner, parameters: Array<Any>) : Parameters(parameters)
+
 class ViewModelDependencyProvider<T : ViewModel>(
     private val moduleScope: ModuleScope,
-    private val instanceFactory: InstanceFactory<T>
+    private val instanceFactory: ViewModelInstanceFactory<T>
 ) : Provider<T> {
-    @ExperimentalStdlibApi
+
     override fun get(parameters: Parameters): T {
-        val viewModelStoreOwner = parameters.parameters.first() as ViewModelStoreOwner
-        val reducedParameters = Parameters(parameters.parameters.removeFirst())
-        val factory = ViewModelFactory(moduleScope, instanceFactory, reducedParameters)
-        return ViewModelProvider(viewModelStoreOwner, factory)
+        val viewModelParameters = parameters as? ViewModelParameters ?: throw ViewModelParametersExpectedException()
+        val factory = ViewModelFactory(moduleScope, instanceFactory, viewModelParameters)
+        return ViewModelProvider(viewModelParameters.viewModelStoreOwner, factory)
             .get(ViewModelHolder::class.java)
             .nestedViewModel as T
     }
@@ -25,8 +28,8 @@ class ViewModelDependencyProvider<T : ViewModel>(
 
 private class ViewModelFactory<T : ViewModel>(
     private val moduleScope: ModuleScope,
-    private val instanceFactory: InstanceFactory<T>,
-    private val parameters: Parameters
+    private val instanceFactory: ViewModelInstanceFactory<T>,
+    private val parameters: ViewModelParameters
 ) : ViewModelProvider.Factory {
 
     override fun <R : ViewModel> create(modelClass: Class<R>): R {
@@ -34,6 +37,6 @@ private class ViewModelFactory<T : ViewModel>(
     }
 }
 
-class ViewModelHolder(val nestedViewModel: ViewModel) : ViewModel()
+private class ViewModelHolder(val nestedViewModel: ViewModel) : ViewModel()
 
-private fun List<*>.removeFirst() = toMutableList().apply { removeAt(0) }.toList()
+class ViewModelParametersExpectedException : RuntimeException("Passed parameters are not ViewModelParameters type")

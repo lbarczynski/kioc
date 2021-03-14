@@ -23,7 +23,9 @@ object DI {
     private val mainModule = module {
         singleton { SimpleClass() }
         factory { (value: String) -> ComplexClass(value) }
-        viewModel { MainViewModel() }
+        viewModel { (text: String) ->
+            MainViewModel(text)
+        }
     }
 
     val container = component {
