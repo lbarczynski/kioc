@@ -1,6 +1,7 @@
 package com.bapps.kioc.core.dsl
 
 import com.bapps.kioc.core.*
+import org.amshove.kluent.`should be equal to`
 import org.amshove.kluent.shouldContain
 import org.junit.Test
 
@@ -9,9 +10,9 @@ class ModuleExtDslTests {
     @Test
     fun `Module factory test`() {
         module {
-            single { Car() }
+            singleton { Car() }
             factory<Vehicle> { Bike() }
-            single(named("secondCar")) { Car() }
+            singleton(named("secondCar")) { Car() }
         }
     }
 
@@ -24,9 +25,9 @@ class ModuleExtDslTests {
 
         // act
         val module = module {
-            single { car }
-            single { bike }
-            single { boat }
+            singleton { car }
+            singleton { bike }
+            singleton { boat }
 
             factory {
                 val car: Car = get()
@@ -35,7 +36,7 @@ class ModuleExtDslTests {
                 Garage(listOf(car, bike, boat))
             }
         }
-        val garage: Garage = module.require()
+        val garage: Garage = module.require<Garage>().get()
 
         // assert
         garage.vehicles shouldContain car
@@ -51,21 +52,38 @@ class ModuleExtDslTests {
 
         // act
         val vehiclesModule = module {
-            single { car }
-            single { bike }
+            singleton { car }
+            singleton { bike }
         }
 
         val garageModule = module(dependsOn = arrayOf(vehiclesModule)) {
-            single {
+            singleton {
                 val car: Car = get()
                 val bike: Bike = get()
                 Garage(listOf(car, bike))
             }
         }
-        val garage: Garage = garageModule.require()
+        val garage: Garage = garageModule.require<Garage>().get(Parameters())
 
         // assert
         garage.vehicles shouldContain car
         garage.vehicles shouldContain bike
+    }
+
+    @Test
+    fun `Provider parameters should be used to create dependency`() {
+        // arrange
+        val expectedWheelsValue = 10
+        val module = module {
+            factory<Vehicle> { (wheels: Int) ->
+                Car(wheels)
+            }
+        }
+
+        // act
+        val vehicle = module.require<Vehicle>().get(Parameters(expectedWheelsValue))
+
+        // assert
+        vehicle.wheels `should be equal to` expectedWheelsValue
     }
 }

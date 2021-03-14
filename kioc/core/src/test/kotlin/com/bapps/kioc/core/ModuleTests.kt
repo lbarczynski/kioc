@@ -1,7 +1,7 @@
 package com.bapps.kioc.core
 
 import com.bapps.kioc.core.dsl.module
-import com.bapps.kioc.core.dsl.single
+import com.bapps.kioc.core.dsl.singleton
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeInstanceOf
 import org.junit.Test
@@ -16,14 +16,14 @@ class ModuleTests {
         val secondCar = Car()
 
         // act
-        module.register<Vehicle>(Single(ModuleScope(module)) { firstCar })
-        module.register(Single(ModuleScope(module)) { secondCar })
-        val vehicle = module.get<Vehicle>()
-        val car = module.get<Car>()
+        module.register<Vehicle>(Singleton(ModuleScope(module)) { firstCar })
+        module.register(Singleton(ModuleScope(module)) { secondCar })
+        val vehicleProvider = module.require<Vehicle>()
+        val carProvider = module.require<Car>()
 
         // assert
-        vehicle shouldBeEqualTo firstCar
-        car shouldBeEqualTo secondCar
+        vehicleProvider.get() shouldBeEqualTo firstCar
+        carProvider.get() shouldBeEqualTo secondCar
     }
 
     @Test(expected = DuplicatedDependencyException::class)
@@ -32,8 +32,8 @@ class ModuleTests {
         val module = Module()
 
         // act
-        module.register(Single<Vehicle>(ModuleScope(module)) { Car() })
-        module.register(Single<Vehicle>(ModuleScope(module)) { Car() })
+        module.register(Singleton<Vehicle>(ModuleScope(module)) { Car() })
+        module.register(Singleton<Vehicle>(ModuleScope(module)) { Car() })
     }
 
     @Test
@@ -46,32 +46,32 @@ class ModuleTests {
         val qualifierSecond: Qualifier = NameQualifier("second")
 
         // act
-        module.register(qualifierFirst, Single(ModuleScope(module)) { expectedCar })
-        module.register(qualifierSecond, Single(ModuleScope(module)) { expectedBike })
-        val receivedCar: Vehicle = module.get(qualifierFirst)!!
-        val receivedBike: Vehicle = module.get(qualifierSecond)!!
+        module.register(qualifierFirst, Singleton(ModuleScope(module)) { expectedCar })
+        module.register(qualifierSecond, Singleton(ModuleScope(module)) { expectedBike })
+        val carProvider = module.require<Vehicle>(qualifierFirst)
+        val bikeProvider = module.require<Vehicle>(qualifierSecond)
 
         // assert
-        receivedCar shouldBeEqualTo expectedCar
-        receivedBike shouldBeEqualTo expectedBike
+        carProvider.get() shouldBeEqualTo expectedCar
+        bikeProvider.get() shouldBeEqualTo expectedBike
     }
 
     @Test
     fun `There should be relation between not dependent modules`() {
         // arrange
         val carModule = module {
-            single<Vehicle> { Car() }
+            singleton<Vehicle> { Car() }
         }
         val boatModule = module {
-            single<Vehicle> { Boat() }
+            singleton<Vehicle> { Boat() }
         }
 
         // act
-        val car: Vehicle = carModule.require()
-        val boat: Vehicle = boatModule.require()
+        val carProvider = carModule.require<Vehicle>()
+        val boatProvider = boatModule.require<Vehicle>()
 
         // assert
-        car shouldBeInstanceOf Car::class
-        boat shouldBeInstanceOf Boat::class
+        carProvider.get() shouldBeInstanceOf Car::class
+        boatProvider.get() shouldBeInstanceOf Boat::class
     }
 }

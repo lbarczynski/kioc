@@ -2,13 +2,14 @@ package com.bapps.kioc.core
 
 class Component(private val modules: List<Module>) {
 
-    fun <T> get(qualifier: Qualifier): T {
+    fun <T> get(qualifier: Qualifier, parameters: Parameters = Parameters()): T {
         val found = modules.mapNotNull { it.get<T>(qualifier) }
         if (found.size > 1) throw DuplicatedDependencyException(qualifier)
-        return found.firstOrNull() ?: throw DependencyNotFoundException(qualifier)
+        val provider = found.firstOrNull() ?: throw DependencyNotFoundException(qualifier)
+        return provider.get(parameters)
     }
 
-    inline fun <reified T> get() = get<T>(TypeQualifier(T::class))
+    inline fun <reified T> get(parameters: Parameters = Parameters()) = get<T>(TypeQualifier(T::class), parameters)
 
     class Builder {
         private val modules = mutableListOf<Module>()

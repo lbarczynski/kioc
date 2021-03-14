@@ -8,12 +8,12 @@ class Module(private val dependsOn: List<Module> = emptyList()) {
         dependencyRegistry.put(qualifier, provider)
     }
 
-    fun <T> get(qualifier: Qualifier): T? {
-        return dependencyRegistry.get<T>(qualifier) ?: dependsOn.map { it.get<T>(qualifier) }.firstOrNull()
+    fun <T> get(qualifier: Qualifier): Provider<T>? {
+        return dependencyRegistry.get(qualifier) ?: dependsOn.mapNotNull { it.get<T>(qualifier) }.firstOrNull()
     }
 
-    fun <T> require(qualifier: Qualifier): T {
-        return get<T>(qualifier) ?: throw DependencyNotFoundException(qualifier)
+    fun <T> require(qualifier: Qualifier): Provider<T> {
+        return get(qualifier) ?: throw DependencyNotFoundException(qualifier)
     }
 
     inline fun <reified T> register(provider: Provider<T>) = register(TypeQualifier(T::class), provider)
@@ -22,6 +22,6 @@ class Module(private val dependsOn: List<Module> = emptyList()) {
 }
 
 class ModuleScope(private val module: Module) {
-    inline fun <reified T> get() = get<T>(TypeQualifier(T::class))
-    fun <T> get(qualifier: Qualifier) = module.require<T>(qualifier)
+    fun <T> get(qualifier: Qualifier, parameters: Parameters = Parameters()) = module.require<T>(qualifier).get(parameters)
+    inline fun <reified T> get(parameters: Parameters = Parameters()) = get<T>(TypeQualifier(T::class), parameters)
 }

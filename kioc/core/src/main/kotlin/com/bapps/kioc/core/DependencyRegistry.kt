@@ -10,8 +10,8 @@ class DependencyRegistry {
         dependencies[qualifier] = provider
     }
 
-    fun <T> get(qualifier: Qualifier): T? {
-        val provider = dependencies[qualifier]
-        return provider?.get() as? T
+    fun <T> get(qualifier: Qualifier): Provider<T>? {
+        return dependencies[qualifier] as? Provider<T>
     }
 }
+
