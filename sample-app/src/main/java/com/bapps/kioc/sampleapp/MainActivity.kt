@@ -10,6 +10,9 @@ class MainActivity : AppCompatActivity() {
 
     private val singleton: SimpleClass = DI.container.get()
     private val factory: ComplexClass = DI.container.get(Parameters("Hello!"))
+    private val viewModel: MainViewModel by lazy {
+        DI.container.get(Parameters(this))
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -18,6 +21,7 @@ class MainActivity : AppCompatActivity() {
             it.lifecycleOwner = this
             it.singleton = singleton
             it.factory = factory
+            it.viewModel = viewModel
         }
 
     }

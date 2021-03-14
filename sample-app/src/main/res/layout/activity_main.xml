@@ -12,6 +12,10 @@
         <variable
             name="factory"
             type="com.bapps.kioc.sampleapp.ComplexClass" />
+
+        <variable
+            name="viewModel"
+            type="com.bapps.kioc.sampleapp.MainViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -37,6 +41,15 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/singleton_tv" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/viewmodel_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{viewModel.toString()}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/factory_tv" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
