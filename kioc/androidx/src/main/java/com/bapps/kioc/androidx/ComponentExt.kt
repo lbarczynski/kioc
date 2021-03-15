@@ -6,3 +6,6 @@ import com.bapps.kioc.core.Component
 
 inline fun <reified T : ViewModel> Component.viewModel(viewModelStoreOwner: ViewModelStoreOwner, vararg parameters: Any) =
     get<T>(ViewModelParameters(viewModelStoreOwner, parameters.toList().toTypedArray()))
+
+inline fun <reified T : ViewModel> Component.lazyViewModel(viewModelStoreOwner: ViewModelStoreOwner, vararg parameters: Any) =
+    lazy { get<T>(ViewModelParameters(viewModelStoreOwner, parameters.toList().toTypedArray())) }

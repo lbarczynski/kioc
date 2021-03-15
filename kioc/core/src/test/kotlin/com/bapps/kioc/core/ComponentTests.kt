@@ -24,7 +24,7 @@ class ComponentTests {
         }
         val garageModule = module(dependsOn = arrayOf(landVehiclesModule, seaVehiclesModule)) {
             factory {
-                val car: Car = get(parameters(garageCarWheels))
+                val car: Car = get(Parameters.of(garageCarWheels))
                 val bike: Bike = get()
                 val boat: Boat = get()
 
@@ -37,7 +37,7 @@ class ComponentTests {
             withModule(garageModule)
         }
 
-        val car: Car = component.get(parameters(expectedCarWheels))
+        val car: Car = component.get(Parameters.of(expectedCarWheels))
         val bike: Bike = component.get()
         val boat: Boat = component.get()
 

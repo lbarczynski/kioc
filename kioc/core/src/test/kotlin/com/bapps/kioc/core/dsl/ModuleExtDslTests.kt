@@ -87,7 +87,7 @@ class ModuleExtDslTests {
         // act
         val vehicle = module
             .require<Vehicle>()
-            .get(parameters(expectedWheelsValue))
+            .get(Parameters.of(expectedWheelsValue))
 
         // assert
         vehicle.wheels `should be equal to` expectedWheelsValue
