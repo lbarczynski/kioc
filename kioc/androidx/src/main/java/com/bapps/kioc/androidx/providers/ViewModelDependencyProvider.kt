@@ -1,9 +1,8 @@
-package com.bapps.kioc.androidx
+package com.bapps.kioc.androidx.providers
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
-import com.bapps.kioc.core.InstanceFactory
 import com.bapps.kioc.core.ModuleScope
 import com.bapps.kioc.core.Parameters
 import com.bapps.kioc.core.Provider

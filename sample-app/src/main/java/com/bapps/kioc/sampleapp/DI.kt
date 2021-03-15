@@ -1,6 +1,6 @@
 package com.bapps.kioc.sampleapp
 
-import com.bapps.kioc.androidx.viewModel
+import com.bapps.kioc.androidx.dsl.viewModel
 import com.bapps.kioc.core.dsl.component
 import com.bapps.kioc.core.dsl.factory
 import com.bapps.kioc.core.dsl.module

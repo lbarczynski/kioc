@@ -3,7 +3,7 @@ package com.bapps.kioc.sampleapp
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import com.bapps.kioc.androidx.lazyViewModel
+import com.bapps.kioc.androidx.dsl.lazyViewModel
 import com.bapps.kioc.core.Parameters
 import com.bapps.kioc.sampleapp.databinding.ActivityMainBinding
 
