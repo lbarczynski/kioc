@@ -8,15 +8,6 @@ import org.junit.Test
 class ModuleExtDslTests {
 
     @Test
-    fun `Module factory test`() {
-        module {
-            singleton { Car() }
-            factory<Vehicle> { Bike() }
-            singleton(named("secondCar")) { Car() }
-        }
-    }
-
-    @Test
     fun `Related dependencies should be available during registration`() {
         // arrange
         val car = Car()

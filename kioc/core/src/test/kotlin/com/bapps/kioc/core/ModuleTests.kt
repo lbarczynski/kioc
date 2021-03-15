@@ -1,6 +1,7 @@
 package com.bapps.kioc.core
 
 import com.bapps.kioc.core.dsl.module
+import com.bapps.kioc.core.dsl.named
 import com.bapps.kioc.core.dsl.singleton
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeInstanceOf
@@ -15,15 +16,16 @@ class ModuleTests {
         val firstCar = Car()
         val secondCar = Car()
 
+        val firstCarProvider = Singleton(module.scope()) { firstCar }
+        val secondCarProvider = Singleton(module.scope()) { secondCar }
+
         // act
-        module.register<Vehicle>(Singleton(ModuleScope(module)) { firstCar })
-        module.register(Singleton(ModuleScope(module)) { secondCar })
-        val vehicleProvider = module.require<Vehicle>()
-        val carProvider = module.require<Car>()
+        module.register<Vehicle>(firstCarProvider)
+        module.register(secondCarProvider)
 
         // assert
-        vehicleProvider.get() shouldBeEqualTo firstCar
-        carProvider.get() shouldBeEqualTo secondCar
+        module.require<Vehicle>().get() shouldBeEqualTo firstCar
+        module.require<Car>().get()  shouldBeEqualTo secondCar
     }
 
     @Test(expected = DuplicatedDependencyException::class)
@@ -42,12 +44,12 @@ class ModuleTests {
         val module = Module()
         val expectedCar = Car()
         val expectedBike = Bike()
-        val qualifierFirst: Qualifier = NameQualifier("first")
-        val qualifierSecond: Qualifier = NameQualifier("second")
+        val qualifierFirst: Qualifier = named("first")
+        val qualifierSecond: Qualifier = named("second")
 
         // act
-        module.register(qualifierFirst, Singleton(ModuleScope(module)) { expectedCar })
-        module.register(qualifierSecond, Singleton(ModuleScope(module)) { expectedBike })
+        module.register(qualifierFirst, Singleton(module.scope()) { expectedCar })
+        module.register(qualifierSecond, Singleton(module.scope()) { expectedBike })
         val carProvider = module.require<Vehicle>(qualifierFirst)
         val bikeProvider = module.require<Vehicle>(qualifierSecond)
 

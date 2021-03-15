@@ -9,8 +9,8 @@ class ProvidersTests {
     @Test
     fun `Single provider should always return the same value`() {
         // arrange
-        val moduleScope = ModuleScope(Module())
-        val provider = Singleton(moduleScope) { SampleStruct(3, "abcd") }
+        val module = Module()
+        val provider = Singleton(module.scope()) { SampleStruct(3, "abcd") }
 
         // act
         val instanceA = provider.get()
@@ -23,8 +23,8 @@ class ProvidersTests {
     @Test
     fun `Factory provider should always return new value`() {
         // arrange
-        val moduleScope = ModuleScope(Module())
-        val provider = Factory(moduleScope) { SampleStruct(3, "abcd") }
+        val module = Module()
+        val provider = Factory(module.scope()) { SampleStruct(3, "abcd") }
 
         // act
         val instanceA = provider.get()

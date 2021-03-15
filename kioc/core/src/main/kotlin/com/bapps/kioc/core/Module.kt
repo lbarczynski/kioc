@@ -16,6 +16,8 @@ class Module(private val dependsOn: List<Module> = emptyList()) {
         return get(qualifier) ?: throw DependencyNotFoundException(qualifier)
     }
 
+    fun scope() = ModuleScope(this)
+
     inline fun <reified T> register(provider: Provider<T>) = register(TypeQualifier(T::class), provider)
     inline fun <reified T> get() = get<T>(TypeQualifier(T::class))
     inline fun <reified T> require() = require<T>(TypeQualifier(T::class))
