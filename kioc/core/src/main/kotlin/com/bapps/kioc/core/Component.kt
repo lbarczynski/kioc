@@ -1,5 +1,9 @@
 package com.bapps.kioc.core
 
+interface ComponentProvider {
+    val component: Component
+}
+
 class Component(private val modules: List<Module>) {
 
     fun <T> get(qualifier: Qualifier, parameters: Parameters = Parameters.EMPTY): T {
@@ -9,9 +13,14 @@ class Component(private val modules: List<Module>) {
         return provider.get(parameters)
     }
 
-    inline fun <reified T> get(parameters: Parameters = Parameters.EMPTY) = get<T>(TypeQualifier(T::class), parameters)
+    inline fun <reified T> get(parameters: Parameters = Parameters.EMPTY) =
+        get<T>(TypeQualifier(T::class), parameters)
 
-    inline fun <reified T> lazyInjection(parameters: Parameters = Parameters.EMPTY) = lazy { get<T>(TypeQualifier(T::class), parameters) }
+    fun <T> lazyInjection(qualifier: Qualifier, parameters: Parameters = Parameters.EMPTY) =
+        lazy { get<T>(qualifier, parameters) }
+
+    inline fun <reified T> lazyInjection(parameters: Parameters = Parameters.EMPTY) =
+        lazy { get<T>(TypeQualifier(T::class), parameters) }
 
     class Builder {
         private val modules = mutableListOf<Module>()
