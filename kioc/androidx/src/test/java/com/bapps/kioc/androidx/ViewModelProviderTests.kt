@@ -1,6 +1,5 @@
 package com.bapps.kioc.androidx
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.ViewModelStoreOwner
 import com.bapps.kioc.androidx.dsl.viewModel

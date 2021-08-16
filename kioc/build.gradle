@@ -1,0 +1,73 @@
+import com.android.build.gradle.LibraryPlugin
+
+subprojects { project ->
+
+    apply plugin: 'maven-publish'
+    apply from: "${rootProject.rootDir}/versions.gradle"
+
+    afterEvaluate {
+        publishing {
+            publications {
+                library(MavenPublication) {
+                    afterEvaluate {
+                        groupId 'com.bapps.kioc'
+                        artifactId "kioc-${project.name}"
+                        version versions.kioc
+                        project.plugins.withType(JavaPlugin) {
+                            from components.java
+                        }
+                        project.plugins.withType(LibraryPlugin) {
+                            from components.release
+                        }
+                    }
+
+                    pom {
+                        name = 'kIOC'
+                        description = 'Lightweight Kotlin IOC container with DSL API. Inspired by Koin & Dagger2'
+                        url = 'https://github.com/lbarczynski/kioc'
+                        licenses {
+                            license {
+                                name = 'The Apache License, Version 2.0'
+                                url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                            }
+                        }
+                        developers {
+                            developer {
+                                id = 'lbarczynski'
+                                name = 'Lukasz Barczynski'
+                                email = 'barczynski.lukasz@gmail.com'
+                            }
+                        }
+                        scm {
+                            connection = 'scm:git:git://github.com/lbarczynski/kioc.git'
+                            developerConnection = 'scm:git:ssh://github.com/lbarczynski/kioc.git'
+                            url = 'https://github.com/lbarczynski/kioc'
+                        }
+                    }
+                }
+            }
+            repositories {
+                maven {
+                    name 'github'
+                    url 'https://maven.pkg.github.com/lbarczynski/kioc'
+                    credentials {
+                        def secrets = loadSecretProperties()
+                        username secrets.getOrDefault('repositories.github.username', System.env.GITHUB_USER)
+                        password secrets.getOrDefault('repositories.github.password', System.env.GITHUB_TOKEN)
+                    }
+                }
+            }
+        }
+    }
+}
+
+def loadSecretProperties() {
+    def secrets = new Properties()
+    def secretsFile = rootProject.file("secrets.properties")
+    if (secretsFile.exists()) {
+        secretsFile.withInputStream { stream ->
+            secrets.load(stream)
+        }
+    }
+    return secrets
+}

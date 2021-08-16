@@ -12,7 +12,7 @@ class MainActivity : AppCompatActivity() {
 
     private val singleton: SimpleClass by lazyInjection()
     private val factory: ComplexClass by lazyInjection(Parameters.of("Hello!"))
-    private val viewModel: MainViewModel by lazyViewModel(this, Parameters.of("Hello from VM!"))
+    private val viewModel: MainViewModel by lazyViewModel(Parameters.of("Hello from VM!"))
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

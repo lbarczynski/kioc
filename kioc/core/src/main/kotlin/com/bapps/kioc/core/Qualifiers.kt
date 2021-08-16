@@ -2,6 +2,9 @@ package com.bapps.kioc.core
 
 import kotlin.reflect.KClass
 
+/**
+ * Instance qualifier
+ */
 interface Qualifier {
     val value: String
 }

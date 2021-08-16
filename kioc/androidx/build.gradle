@@ -3,6 +3,8 @@ plugins {
     id 'kotlin-android'
 }
 
+apply from: "${rootProject.rootDir}/versions.gradle"
+
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
@@ -11,7 +13,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 30
         versionCode 1
-        versionName kioc_version
+        versionName "v${versions.kioc}"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
